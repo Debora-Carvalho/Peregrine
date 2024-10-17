@@ -1,4 +1,4 @@
-//pagina u_codigoRecuperacao.html
+// pagina u_codigoRecuperacao.html
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // exibe mensagem se o código contiver caracteres inválidos
         if (!/^\d*$/.test(codeValue)) {
-            showError(verificationInput, "O código é formado por 4 números. Não utilize letras.");
-        } else if (codeValue.length > 4) {
-            showError(verificationInput, "O código deve ter exatamente 4 números.");
+            showError(verificationInput, "O código é formado por 6 números. Não utilize letras.");
+        } else if (codeValue.length > 6) {
+            showError(verificationInput, "O código deve ter exatamente 6 números.");
         }
     });
 
@@ -28,15 +28,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // limpa mensagens de erro anteriores
         clearErrorMessages();
 
-        // verifica se o código tem exatamente 4 números
-        if (!/^\d{4}$/.test(codeValue)) {
-            showError(verificationInput, "O código é formado por 4 números.");
+        // verifica se o código tem exatamente 6 números
+        if (!/^\d{6}$/.test(codeValue)) {
+            showError(verificationInput, "O código é formado por 6 números.");
             valid = false;
         }
 
         // verifica se o campo está preenchido
         if (codeValue === "") {
-            alert("Você precisa informar o código para prosseguir ;)");
+            showError(verificationInput, "Você precisa informar o código para prosseguir.");
             valid = false;
         }
 

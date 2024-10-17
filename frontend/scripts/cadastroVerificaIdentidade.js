@@ -1,14 +1,16 @@
 //pagina u_cadastroVerificaIdentidade
+
 document.addEventListener('DOMContentLoaded', function () {
     const uploadIcon3 = document.getElementById('uploadIcon3');
     const formFile3 = document.getElementById('formFile3');
 
-    //altera a imagem do ícone quando um arquivo é selecionado ou removido
+    // altera a imagem do ícone quando um arquivo é selecionado ou removido
     formFile3.addEventListener('change', function () {
         if (formFile3.files.length > 0) {
             uploadIcon3.src = '../public/images/icon-arquivoUploadFeito.png'; 
+            fileErrorMessage.style.display = 'none'; // remove a mensagem de erro se o arquivo for selecionado
         } else {
-            uploadIcon3.src = '../public/images/icon-arquivoUpload.png'; // Retorna à imagem padrão
+            uploadIcon3.src = '../public/images/icon-arquivoUpload.png'; // retorna à imagem padrão
         }
     });
 
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputBirthDate = document.getElementById('inputBirthDate');
     const submitButton = document.querySelector('button[type="submit"]');
 
-    //mensagens de erro
+    // mensagens de erro
     const nameErrorMessage = document.createElement('div');
     nameErrorMessage.className = 'text-danger';
     nameErrorMessage.style.display = 'none'; 
@@ -33,7 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
     ageErrorMessage.style.display = 'none';
     inputBirthDate.parentNode.insertBefore(ageErrorMessage, inputBirthDate.nextSibling);
 
-    // Validação do nome
+    const fileErrorMessage = document.createElement('div');
+    fileErrorMessage.className = 'text-danger';
+    fileErrorMessage.style.display = 'none';
+    formFile3.parentNode.insertBefore(fileErrorMessage, formFile3.nextSibling);
+
+    // validação do nome
     inputName.addEventListener('input', function () {
         const nameValue = inputName.value;
         if (/[^a-zA-ZÀ-ÿ\s]/.test(nameValue) || nameValue.trim() === '') {
@@ -44,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Validação do CPF
+    // validação do CPF
     inputCPF.addEventListener('input', function () {
         const cpfValue = inputCPF.value;
         if (!/^\d*$/.test(cpfValue)) {
@@ -81,10 +88,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // validação antes de enviar o formulário
     submitButton.addEventListener('click', function (event) {
-        const allInputsFilled = inputName.value && inputCPF.value && inputBirthDate.value && formFile3.files.length > 0;
+        let allInputsFilled = true;
+
+        // verifica se o campo de nome está preenchido corretamente
+        if (inputName.value.trim() === '') {
+            nameErrorMessage.textContent = 'O campo de nome é obrigatório';
+            nameErrorMessage.style.display = 'block';
+            allInputsFilled = false;
+        }
+
+        // verifica se o campo de CPF está preenchido corretamente
+        if (inputCPF.value.trim() === '' || inputCPF.value.length !== 11) {
+            cpfErrorMessage.textContent = 'O campo de CPF é obrigatório e deve conter 11 dígitos';
+            cpfErrorMessage.style.display = 'block';
+            allInputsFilled = false;
+        }
+
+        // verifica se a data de nascimento está preenchida
+        if (inputBirthDate.value.trim() === '') {
+            ageErrorMessage.textContent = 'O campo de data de nascimento é obrigatório';
+            ageErrorMessage.style.display = 'block';
+            allInputsFilled = false;
+        }
+
+        // verifica se o arquivo foi anexado
+        if (formFile3.files.length === 0) {
+            fileErrorMessage.textContent = 'Por favor, anexe um arquivo.';
+            fileErrorMessage.style.display = 'block';
+            allInputsFilled = false;
+        }
+
         if (!allInputsFilled) {
-            event.preventDefault(); // impede o envio do formulário sem tudo estar preenchido
-            alert('Você deve preencher todos os campos para conseguir enviar seu cadastro :/');
+            event.preventDefault(); // impede o envio do formulário se algum campo não estiver preenchido
         }
     });
 });

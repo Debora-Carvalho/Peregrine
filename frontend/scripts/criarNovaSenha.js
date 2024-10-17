@@ -1,4 +1,4 @@
-//pagina u_criarNovaSenha.html
+// pagina u_criarNovaSenha.html
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // limpa mensagens de erro anteriores
         clearErrorMessages();
 
-        // exibe mensagem se a senha for menor que 8 caracteres
-        if (newPassword.length < 8) {
-            showError(newPasswordInput, "A senha deve ter no mínimo 8 caracteres");
+        // validação da senha: mínimo de 8 caracteres, uma letra e um caractere especial
+        if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
+            showError(newPasswordInput, "A senha deve conter pelo menos 8 dígitos, uma letra e um caractere especial.");
         }
     });
 
-    // verifica as senhas enquanto o usuário digita no campo de confirmação
+    // verifica se as senhas coincidem enquanto o usuário digita no campo de confirmação
     confirmPasswordInput.addEventListener("input", function () {
         const newPassword = newPasswordInput.value.trim();
         const confirmPassword = confirmPasswordInput.value.trim();
@@ -26,37 +26,44 @@ document.addEventListener("DOMContentLoaded", function () {
         // limpa mensagens de erro anteriores
         clearErrorMessages();
 
-        // exibe mensagem se as senhas não coincidem
+        // exibe mensagem se as senhas não coincidirem
         if (newPassword !== confirmPassword) {
-            showError(confirmPasswordInput, "As senhas não conferem");
+            showError(newPasswordInput, "As senhas não conferem.");
+            showError(confirmPasswordInput, "As senhas não conferem.");
         }
     });
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // previne o envio do formulário até que todas as validações sejam feitas
+        event.preventDefault(); // previne o envio do formulário até que as validações sejam feitas
 
         const newPassword = newPasswordInput.value.trim();
         const confirmPassword = confirmPasswordInput.value.trim();
         let valid = true;
 
-        // remove mensagens de erro anteriores
+        // limpa mensagens de erro anteriores
         clearErrorMessages();
 
-        // verifica se a senha tem no mínimo 8 caracteres
-        if (newPassword.length < 8) {
-            showError(newPasswordInput, "A senha deve ter no mínimo 8 caracteres");
+        // verifica se os campos estão preenchidos
+        if (newPassword === "") {
+            showError(newPasswordInput, "Preencha todos os campos para criar sua nova senha.");
+            valid = false;
+        }
+
+        if (confirmPassword === "") {
+            showError(confirmPasswordInput, "Preencha todos os campos para criar sua nova senha.");
+            valid = false;
+        }
+
+        // validação da senha: mínimo de 8 caracteres, uma letra e um caractere especial
+        if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
+            showError(newPasswordInput, "A senha deve conter pelo menos 8 dígitos, uma letra e um caractere especial.");
             valid = false;
         }
 
         // verifica se as senhas coincidem
         if (newPassword !== confirmPassword) {
-            showError(confirmPasswordInput, "As senhas não conferem");
-            valid = false;
-        }
-
-        // verifica se os campos estão preenchidos
-        if (newPassword === "" || confirmPassword === "") {
-            alert("Você precisa preencher todos os campos para criar sua nova senha :/");
+            showError(newPasswordInput, "As senhas não conferem.");
+            showError(confirmPasswordInput, "As senhas não conferem.");
             valid = false;
         }
 
@@ -66,8 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // função para exibir mensagens de erro
     function showError(input, message) {
-        // verifica se já existe uma mensagem de erro antes de adicionar
         if (!input.parentElement.querySelector(".text-danger")) {
             const errorElement = document.createElement("div");
             errorElement.className = "text-danger mt-1";
@@ -76,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // função para limpar mensagens de erro
     function clearErrorMessages() {
         const errorMessages = document.querySelectorAll(".text-danger");
         errorMessages.forEach(function (message) {
@@ -83,4 +91,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
-
